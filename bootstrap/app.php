@@ -20,9 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
             $token = env('TELEGRAM_BOT_TOKEN');
             $chat_id = env('TELEGRAM_ADMIN_CHAT_ID');
 
-            $text = '<u>Logging</u>' . PHP_EOL;
-            $text .= '<b>' . get_class($e) . '</b>: ' . $e->getMessage() . PHP_EOL;
-            $text .= 'File: ' . $e->getFile() . '(' . $e->getLine() . ')' . PHP_EOL;
+            $text = (string)view('telegram.error', [
+                'e' => $e
+            ]);
 
             Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
                 'chat_id' => $chat_id,
