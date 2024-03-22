@@ -28,29 +28,27 @@ class SetWebhookCommand extends Command
     public function handle()
     {
         if (App::environment('local')) {
-            $url = config('custom.local_url');
+            $app_url = config('custom.local_url');
         } else {
-            $url = config('app.url');
+            $app_url = config('app.url');
         }
 
-        $url = parse_url($url);
+        $url = parse_url($app_url);
         if ($url['scheme'] != 'https') {
             echo 'Please, use https protocol on APP_URL env variable';
             return;
         }
 
-        dump($url['host']);
+        echo 'Attemting to set webhook on url: ' . $url['host'] . '/api/webhook' . PHP_EOL;
 
         $token = config('custom.telegram.token');
-
         $response = Http::post("https://api.telegram.org/bot{$token}/setWebhook", [
-            'url' => $url,
+            'url' => $app_url . '/api/webhook',
         ])->json();
 
-        if ($response['ok']) {
-            echo $response['descripion'];
-        } else {
-            dump($response);
+        if (!$response['ok']) {
+            echo 'Error: ' . $response['error_code'] . PHP_EOL;
         }
+        echo $response['description'];
     }
 }
