@@ -19,7 +19,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->reportable(function (Throwable $e) {
             $token = env('TELEGRAM_BOT_TOKEN');
             $chat_id = env('TELEGRAM_ADMIN_CHAT_ID');
-
             $text = (string)view('telegram.error', [
                 'e' => $e
             ]);
